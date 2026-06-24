@@ -98,7 +98,7 @@ Run the command in your Terminal to initialize this template on your local compu
 See the documentation if you are [having issues with the CLI](https://www.sanity.io/help/cli-errors).
 
 ```shell
-pnpm create sanity@latest -- --template sanity-io/template-nextjs-personal-website
+pnpm create sanity@latest -- --template angelo-manalo/nextjs-sanity-portfolio-template-pnpm
 ```
 
 #### 2. Run app locally in development mode
@@ -168,7 +168,7 @@ You can remove it by deleting the `IntroTemplate` component in `/app/(website)/l
 - [How to query content?][sanity-groq]
 - [What is content modelling?][sanity-content-modelling]
 
-[vercel-deploy]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsanity-io%2Ftemplate-nextjs-personal-website&project-name=nextjs-personal-website&repository-name=nextjs-personal-website&demo-title=Personal+Website+with+Built-in+Content+Editing&demo-description=A+Sanity-powered+personal+website+with+built-in+content+editing+and+instant+previews.+Uses+App+Router.&demo-url=https%3A%2F%2Ftemplate-nextjs-personal-website.sanity.build%2F&demo-image=https%3A%2F%2Fuser-images.githubusercontent.com%2F6951139%2F206395107-e58a796d-13a9-400a-94b6-31cb5df054ab.png&products=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22other%22%2C%22productSlug%22%3A%22project%22%2C%22integrationSlug%22%3A%22sanity%22%7D%5D
+[vercel-deploy]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fangelo-manalo%2Fnextjs-sanity-portfolio-template-pnpm&project-name=nextjs-sanity-portfolio-template-pnpm&repository-name=nextjs-sanity-portfolio-template-pnpm&demo-title=Personal+Website+with+Built-in+Content+Editing&demo-description=A+Sanity-powered+personal+website+with+built-in+content+editing+and+instant+previews.+Uses+App+Router.&demo-url=https%3A%2F%2Ftemplate-nextjs-personal-website.sanity.build%2F&demo-image=https%3A%2F%2Fuser-images.githubusercontent.com%2F6951139%2F206395107-e58a796d-13a9-400a-94b6-31cb5df054ab.png&products=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22other%22%2C%22productSlug%22%3A%22project%22%2C%22integrationSlug%22%3A%22sanity%22%7D%5D
 [integration]: https://www.sanity.io/docs/vercel-integration?utm_source=github.com&utm_medium=referral&utm_campaign=nextjs-v3vercelstarter
 [`.env.local.example`]: .env.local.example
 [nextjs]: https://github.com/vercel/next.js
@@ -185,6 +185,6 @@ You can remove it by deleting the `IntroTemplate` component in `/app/(website)/l
 [localhost-3000-studio]: http://localhost:3000/studio
 [vercel]: https://vercel.com
 [vercel-github]: https://github.com/vercel/next.js/discussions
-[personal-website-pages]: https://github.com/sanity-io/template-nextjs-personal-website
+[personal-website-pages]: https://github.com/angelo-manalo/nextjs-sanity-portfolio-template-pnpm
 [presentation]: https://www.sanity.io/docs/presentation
 [cache-components]: https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents

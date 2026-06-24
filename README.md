@@ -1,7 +1,7 @@
 # Next.js & Sanity.io Personal Portfolio Website Template (pnpm Version) <!-- omit in toc -->
 
 > [!NOTE]
-> This is a **pnpm-optimized version** of the official Sanity Next.js Personal Website template, configured to work with `pnpm` v11 out of the box. Highly optimized for performance, fast disk space usage, and quick builds.
+> This is a **pnpm-optimized version** of the official [Sanity Next.js Personal Website template](https://github.com/sanity-io/template-nextjs-personal-website), configured to work with `pnpm` v11 out of the box. Highly optimized for performance, fast disk space usage, and quick builds.
 
 [![Deploy with Vercel](https://vercel.com/button)][vercel-deploy]
 

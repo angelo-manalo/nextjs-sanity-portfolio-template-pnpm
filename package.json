@@ -1,15 +1,15 @@
 {
-  "name": "sanity-template-template-nextjs-personal-website",
+  "name": "nextjs-sanity-portfolio-template-pnpm",
   "private": true,
   "scripts": {
     "analyze": "next experimental-analyze --serve",
-    "prebuild": "npm run stega-warn",
+    "prebuild": "pnpm stega-warn",
     "build": "next build --turbopack && sanity manifest extract --path public/studio/static",
-    "predev": "npm run typegen && npm run stega-warn",
+    "predev": "pnpm typegen && pnpm stega-warn",
     "dev": "next --turbopack",
-    "format": "npx prettier --write . --ignore-path .gitignore",
+    "format": "prettier --write . --ignore-path .gitignore",
     "lint": "eslint .",
-    "lint:fix": "npm run format && npm run lint -- --fix",
+    "lint:fix": "pnpm format && pnpm lint -- --fix",
     "start": "next start",
     "stega-warn": "echo 'This template is using stega to embed Content Source Maps, see more information here: https://www.sanity.io/docs/loaders-and-overlays#26cf681fadd4'",
     "type-check": "next typegen && tsc --noEmit",
@@ -52,6 +52,7 @@
     "eslint-plugin-react-hooks": "7.0.1",
     "postcss": "8.5.15",
     "prettier": "3.8.4",
+    "prettier-plugin-packagejson": "2.5.22",
     "prettier-plugin-tailwindcss": "0.8.0",
     "tailwindcss": "3.4.19",
     "typescript": "5.9.3"

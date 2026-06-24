@@ -1,8 +1,11 @@
-# A Next.js Personal Website with a Native Authoring Experience<!-- omit in toc -->
+# Next.js & Sanity.io Personal Portfolio Website Template (pnpm Version) <!-- omit in toc -->
+
+> [!NOTE]
+> This is a **pnpm-optimized version** of the official Sanity Next.js Personal Website template, configured to work with `pnpm` v11 out of the box. Highly optimized for performance, fast disk space usage, and quick builds.
 
 [![Deploy with Vercel](https://vercel.com/button)][vercel-deploy]
 
-This starter is a personal website that uses [Next.js][nextjs] for the frontend and [Sanity][sanity-homepage] to handle its content. It runs with [Next.js Cache Components][cache-components] enabled: every page prerenders into a static shell and refreshes on content changes through Sanity Live — no rebuild required. The template comes with a native Sanity Studio that offers features like real-time collaboration and visual editing with live updates using [Presentation][presentation].
+This is a developer-focused, open-source **Next.js & Sanity.io Personal Portfolio Website Template** configured to use **pnpm** out of the box. It uses [Next.js][nextjs] for the frontend and [Sanity][sanity-homepage] as a headless CMS to manage content. It runs with [Next.js Cache Components][cache-components] enabled: every page prerenders into a static shell and refreshes on content changes through Sanity Live — no rebuild required. The template comes with a native Sanity Studio that offers features like real-time collaboration and visual editing with live updates using [Presentation][presentation].
 
 The Studio connects to Sanity Content Lake, which gives you hosted content APIs with a flexible query language, on-demand image transformations, powerful patching, and more. You can use this starter to kick-start a personal website or learn these technologies.
 
@@ -95,7 +98,7 @@ Run the command in your Terminal to initialize this template on your local compu
 See the documentation if you are [having issues with the CLI](https://www.sanity.io/help/cli-errors).
 
 ```shell
-npm create sanity@latest -- --template sanity-io/template-nextjs-personal-website
+pnpm create sanity@latest -- --template sanity-io/template-nextjs-personal-website
 ```
 
 #### 2. Run app locally in development mode
@@ -103,7 +106,7 @@ npm create sanity@latest -- --template sanity-io/template-nextjs-personal-websit
 Navigate to the template directory using `cd <your app name>`, and start the development servers by running the following command
 
 ```shell
-npm run dev
+pnpm dev
 ```
 
 #### 3. Open the app and sign in to the Studio

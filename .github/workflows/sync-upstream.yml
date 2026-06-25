@@ -38,29 +38,75 @@ jobs:
           git remote add upstream https://github.com/sanity-io/template-nextjs-personal-website.git
           git fetch upstream main
 
-      - name: Merge Upstream Changes
+      - name: Reconcile and Merge Upstream Changes
         run: |
-          # Merge upstream changes, allowing unrelated histories if needed
-          git merge upstream/main --allow-unrelated-histories -m "chore: merge upstream changes from sanity template" || {
-            echo "Conflict occurred during merge. Manual resolution required."
+          # 1. Programmatically merge package.json dependencies and rewrite scripts
+          node -e "
+          const fs = require('fs');
+          const { execSync } = require('child_process');
+          
+          // Read local and upstream packages
+          const localPkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const upstreamPkg = JSON.parse(execSync('git show upstream/main:package.json').toString());
+          
+          // Merge dependencies (upstream overrides, but preserves unique local deps)
+          const mergedDeps = { ...localPkg.dependencies, ...upstreamPkg.dependencies };
+          const mergedDevDeps = { ...localPkg.devDependencies, ...upstreamPkg.devDependencies };
+          
+          // Merge and rewrite scripts from npm to pnpm
+          const mergedScripts = { ...upstreamPkg.scripts, ...localPkg.scripts };
+          for (const key in mergedScripts) {
+            if (typeof mergedScripts[key] === 'string') {
+              mergedScripts[key] = mergedScripts[key]
+                .replace(/\bnpm run\b/g, 'pnpm')
+                .replace(/\bnpm\b/g, 'pnpm');
+            }
+          }
+          
+          // Construct the new package.json preserving our branding
+          const finalPkg = {
+            ...upstreamPkg,
+            name: localPkg.name,
+            private: localPkg.private !== undefined ? localPkg.private : upstreamPkg.private,
+            scripts: mergedScripts,
+            dependencies: mergedDeps,
+            devDependencies: mergedDevDeps
+          };
+          
+          fs.writeFileSync('package.json', JSON.stringify(finalPkg, null, 2) + '\n');
+          "
+          
+          # 2. Run the Git merge (do not commit yet)
+          git merge upstream/main --allow-unrelated-histories --no-commit --no-ff || true
+          
+          # 3. Resolve conflicts in branding files by choosing our local versions
+          git checkout --ours README.md .env.local.example vercel-installation-instructions.md || true
+          
+          # 4. Stage the resolved files and our programmatically-merged package.json
+          git add package.json README.md .env.local.example vercel-installation-instructions.md
+          
+          # 5. Remove the upstream package-lock.json if introduced
+          if [ -f package-lock.json ]; then
+            git rm --cached package-lock.json || true
+            rm -f package-lock.json || true
+          fi
+          
+          # 6. Commit the merge if other code merges cleanly
+          git commit -m "chore: merge upstream changes, preserving pnpm and branding" || {
+            echo "Merge conflicts exist in functional code files. Manual resolution required."
             exit 1
           }
 
-      - name: Clean npm Lockfile and Update pnpm
+      - name: Regenerate pnpm Lockfile
         run: |
-          # Delete package-lock.json if it was merged back in
-          if [ -f package-lock.json ]; then
-            rm package-lock.json
-          fi
-          
-          # Regenerate/update the pnpm lockfile
+          # Re-install dependencies using pnpm and regenerate the lockfile
           pnpm install --no-frozen-lockfile
           
-          # Stage the package updates and lockfiles
-          git add package.json pnpm-lock.yaml pnpm-workspace.yaml || true
+          # Stage the updated lockfile and workspace files
+          git add pnpm-lock.yaml pnpm-workspace.yaml || true
           
-          # Commit the updates if there are changes
-          if ! git diff --cached --quiet; then
+          # Commit the updated lockfile if it has changed
+          if ! git diff --quiet --cached; then
             git commit -m "chore: regenerate pnpm-lock.yaml after upstream merge"
           fi
 

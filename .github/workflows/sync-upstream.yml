@@ -50,7 +50,9 @@ jobs:
           git checkout --ours README.md .env.local.example vercel-installation-instructions.md || true
 
           # 3b. Keep our workflow files — GITHUB_TOKEN cannot push .github/workflows/ changes
-          git checkout --ours .github/workflows/ || true
+          #     Use HEAD (not --ours) so new upstream workflow files are also removed
+          git checkout HEAD -- .github/workflows/
+          git reset HEAD -- .github/workflows/ || true
 
           # 4. Programmatically merge package.json from the saved local + upstream tree
           node -e "
@@ -89,7 +91,7 @@ jobs:
           "
 
           # 5. Stage resolved files and the programmatically-merged package.json
-          git add package.json README.md .env.local.example vercel-installation-instructions.md .github/workflows/
+          git add package.json README.md .env.local.example vercel-installation-instructions.md
 
           # 6. Remove the upstream package-lock.json if introduced
           if [ -f package-lock.json ]; then

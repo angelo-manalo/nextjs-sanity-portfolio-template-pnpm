@@ -40,19 +40,28 @@ jobs:
 
       - name: Reconcile and Merge Upstream Changes
         run: |
-          # 1. Programmatically merge package.json dependencies and rewrite scripts
+          # 1. Save our local package.json before the merge clobbers it
+          cp package.json /tmp/local-package.json
+
+          # 2. Run the Git merge first (do not commit yet)
+          git merge upstream/main --allow-unrelated-histories --no-commit --no-ff || true
+
+          # 3. Resolve conflicts in branding files by choosing our local versions
+          git checkout --ours README.md .env.local.example vercel-installation-instructions.md || true
+
+          # 4. Programmatically merge package.json from the saved local + upstream tree
           node -e "
           const fs = require('fs');
           const { execSync } = require('child_process');
-          
-          // Read local and upstream packages
-          const localPkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+
+          // Read our saved local package.json (pre-merge, no conflict markers)
+          const localPkg = JSON.parse(fs.readFileSync('/tmp/local-package.json', 'utf8'));
           const upstreamPkg = JSON.parse(execSync('git show upstream/main:package.json').toString());
-          
+
           // Merge dependencies (upstream overrides, but preserves unique local deps)
           const mergedDeps = { ...localPkg.dependencies, ...upstreamPkg.dependencies };
           const mergedDevDeps = { ...localPkg.devDependencies, ...upstreamPkg.devDependencies };
-          
+
           // Merge and rewrite scripts from npm to pnpm
           const mergedScripts = { ...upstreamPkg.scripts, ...localPkg.scripts };
           for (const key in mergedScripts) {
@@ -62,7 +71,7 @@ jobs:
                 .replace(/\bnpm\b/g, 'pnpm');
             }
           }
-          
+
           // Construct the new package.json preserving our branding
           const finalPkg = {
             ...upstreamPkg,
@@ -72,26 +81,20 @@ jobs:
             dependencies: mergedDeps,
             devDependencies: mergedDevDeps
           };
-          
+
           fs.writeFileSync('package.json', JSON.stringify(finalPkg, null, 2) + '\n');
           "
-          
-          # 2. Run the Git merge (do not commit yet)
-          git merge upstream/main --allow-unrelated-histories --no-commit --no-ff || true
-          
-          # 3. Resolve conflicts in branding files by choosing our local versions
-          git checkout --ours README.md .env.local.example vercel-installation-instructions.md || true
-          
-          # 4. Stage the resolved files and our programmatically-merged package.json
+
+          # 5. Stage resolved files and the programmatically-merged package.json
           git add package.json README.md .env.local.example vercel-installation-instructions.md
-          
-          # 5. Remove the upstream package-lock.json if introduced
+
+          # 6. Remove the upstream package-lock.json if introduced
           if [ -f package-lock.json ]; then
             git rm --cached package-lock.json || true
             rm -f package-lock.json || true
           fi
-          
-          # 6. Commit the merge if other code merges cleanly
+
+          # 7. Commit the merge if other code merges cleanly
           git commit -m "chore: merge upstream changes, preserving pnpm and branding" || {
             echo "Merge conflicts exist in functional code files. Manual resolution required."
             exit 1

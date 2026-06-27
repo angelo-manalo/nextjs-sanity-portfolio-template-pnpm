@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  workflows: write
 
 jobs:
   sync:
@@ -50,6 +49,9 @@ jobs:
           # 3. Resolve conflicts in branding files by choosing our local versions
           git checkout --ours README.md .env.local.example vercel-installation-instructions.md || true
 
+          # 3b. Keep our workflow files — GITHUB_TOKEN cannot push .github/workflows/ changes
+          git checkout --ours .github/workflows/ || true
+
           # 4. Programmatically merge package.json from the saved local + upstream tree
           node -e "
           const fs = require('fs');
@@ -87,7 +89,7 @@ jobs:
           "
 
           # 5. Stage resolved files and the programmatically-merged package.json
-          git add package.json README.md .env.local.example vercel-installation-instructions.md
+          git add package.json README.md .env.local.example vercel-installation-instructions.md .github/workflows/
 
           # 6. Remove the upstream package-lock.json if introduced
           if [ -f package-lock.json ]; then
